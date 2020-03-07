@@ -1,8 +1,0 @@
-ip-172-31-92-250.ec2.internal
-{
-  "Code" : "Success",
-  "LastUpdated" : "2020-03-07T01:22:31Z",
-  "InstanceProfileArn" : "arn:aws:iam::171603817339:instance-profile/S3-full-access-01",
-  "InstanceProfileId" : "AIPASP5DCON55VK5ZW3TW"
-}
-Exercise - Webserver
