@@ -1,0 +1,58 @@
+---
+- name: update all software
+  hosts: all
+  become: yes
+  vars:
+    administrator_name: corpadmin
+    administrator_password: 19931201Zestor
+
+  tasks:
+   - name: create a user
+     user: name={{administrator_name}} password={{administrator_password}}
+   - name: update sudo yum
+     yum: name='*' state=latest
+
+- name: setup on webserver
+  hosts: web1
+  become: yes
+
+  tasks:
+   - name: install nginx package
+     yum: name=nginx state=latest
+   - name: configure nginx
+     service:
+        name: nginx
+        state: started
+        enabled: yes
+   - name: copy nginx.conf to webservers
+     template: src=./default.conf.j2  dest=/etc/nginx/conf.d/default.conf 
+   
+  handlers:
+   - name: restarting nginx package
+     service:
+        name: nginx
+        state: restarted
+        enabled: yes
+
+- name: setup on database
+  hosts: database1
+  become: yes
+
+  tasks:
+   - name: installing mysql
+     yum: name=mysql-server state=latest
+
+  handlers:
+   - name: configure mysql
+     service:
+        name: mysqld
+        state: started
+        enabled: yes
+   - name: restart mysql
+     service:
+        name: mysqld
+        state: restarted
+        enabled: yes
+   - name: create directories
+     file: dest=/var/data/client{{item}} state=directory
+     with_sequence: start=1 end=5
